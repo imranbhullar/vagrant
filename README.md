@@ -4,7 +4,7 @@ This will be placeholder for our work related to vagrant
 
 ## Getting Started
 
-One just needs to install required version of vagrant on his machine to use this framework.
+One just needs to install required version of vagrant on his machine to use the Vagrant files.
 
 ### Prerequisites
 

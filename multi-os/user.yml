@@ -1,0 +1,63 @@
+#An Ansible playbook to bootstrap a newly created server (Ubuntu, CentOS, Amazon Linux), this will 1. Add user with sudo/passwd less auth, 2. run Yum update, 3. installing some necessary pacakges
+---
+- hosts: all 
+  become: yes
+  user: vagrant
+  connection: ssh
+
+  tasks:
+  - name: installing some necessary packages
+    yum:
+      name:
+        - libselinux-python
+      state: present
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' #or ansible_distribution == 'Amazon'
+  - name: Create a new user on RPM
+    user:
+      name: testuser
+      comment: testuser user for test machines
+      group: wheel
+      shell: /bin/bash
+      state: present
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' or ansible_distribution == 'Amazon'
+ 
+  - name: Create a new user on DEB
+    user:
+      name: testuser
+      comment: testuser user for test machines
+      group: sudo
+      shell: /bin/bash
+      state: present
+    when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+
+
+  - name: Allow wheel group to have passwordless sudo
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^%wheel'
+      line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' or ansible_distribution == 'Amazon'
+
+  - name: Allow sudo group to have passwordless sudo
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^%sudo'
+      line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+
+  - name: make a directory
+    file:
+      path: "/home/testuser/.ssh"
+      state: directory
+
+  - name: create empty file
+    file:
+      path: "/home/testuser/.ssh/authorized_keys"
+      state: touch
+
+  - name: put pubkey
+    lineinfile:
+      path: "/home/testuser/.ssh/authorized_keys"
+      line: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDUBW3tMRXPDWWphsiaHBIpgybA/4XfMIACFelR2tWeNjfTXq0N/EVghq+WHNgs0VYbgXYVD0atWGh0ChS7nKiUh9Yv5c+Lbz2cdqa8J66jq0UQ1m+Ipl4SRH4SrolpT6YIVtaZPn2PlyF21fR6BKdNg5cZVptrJk4n55J58uyQF+KXmz1bhOqvwaPZn7WVWRR29SUvSTvzTZDomGvUhS5AHSxVHm6vWtOfCvtrS7hdPmfbP4lgh3HxoiDQE0/4Xx3SdvwMjWv0R3NpSDcz0kYef1cC/3rBwuo2xyrFvWaTgk2sIcDl8DEaWQNZcNv62etTMcz/154MIra+u+dvmF3z testuser@Muhammads-MBP"

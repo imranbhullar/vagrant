@@ -1,0 +1,86 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure(2) do |config|
+    config.vm.provision :ansible do |ansible|
+        ansible.limit = "all"
+        ansible.playbook = "user.yaml"
+        
+    config.vm.define "centos6" do |centos6|
+      centos6.vm.box = "generic/centos6"
+      centos6.vm.hostname = "centos6"
+      centos6.vm.network "private_network", ip: "172.24.1.10"
+      centos6.vm.provider :virtualbox do |centos6|
+         centos6.customize ["modifyvm", :id, "--memory", "512"]
+         centos6.customize ["modifyvm", :id, "--cpus", "1"]
+      end
+end
+
+
+
+config.vm.define "centos7" do |centos7|
+      centos7.vm.box = "generic/centos7"
+      centos7.vm.hostname = "centos7"
+      centos7.vm.network  "private_network", ip: "172.24.1.11"
+      centos7.vm.provider :virtualbox do |centos7|
+         centos7.customize ["modifyvm", :id, "--memory", "512"]
+         centos7.customize ["modifyvm", :id, "--cpus", "1"]
+    end
+end
+
+    config.vm.define "ubuntu16" do |ubuntu16|
+        ubuntu16.vm.box = "generic/ubuntu1604"
+        ubuntu16.vm.hostname = "ubuntu16"
+        ubuntu16.vm.network  "private_network", ip: "172.24.1.12"
+        ubuntu16.vm.provider :virtualbox do |ubuntu16|
+            ubuntu16.customize ["modifyvm", :id, "--memory", "512"]
+            ubuntu16.customize ["modifyvm", :id, "--cpus", "1"]
+      end
+end
+    config.vm.define "ubuntu18" do |ubuntu18|
+        ubuntu18.vm.box = "generic/ubuntu1804"
+        ubuntu18.vm.hostname = "ubuntu18"
+        ubuntu18.vm.network  "private_network", ip: "172.24.1.13"
+        ubuntu18.vm.provider :virtualbox do |ubuntu18|
+            ubuntu18.customize ["modifyvm", :id, "--memory", "512"]
+            ubuntu18.customize ["modifyvm", :id, "--cpus", "1"]
+      end
+end
+
+    config.vm.define "ubuntu20" do |ubuntu20|
+        ubuntu20.vm.box = "generic/ubuntu2004"
+        ubuntu20.vm.hostname = "ubuntu20"
+        ubuntu20.vm.network  "private_network", ip: "172.24.1.14"
+        ubuntu20.vm.provider :virtualbox do |ubuntu20|
+            ubuntu20.customize ["modifyvm", :id, "--memory", "512"]
+            ubuntu20.customize ["modifyvm", :id, "--cpus", "1"]
+      end
+end
+
+
+
+   config.vm.define "amzn" do |amzn|
+        amzn.vm.box = "spscommerce/amazonlinux"
+        amzn.vm.hostname = "amzn"
+        amzn.vm.network  "private_network", ip: "172.24.1.15"
+        amzn.vm.provider :virtualbox do |amzn|
+            amzn.customize ["modifyvm", :id, "--memory", "512"]
+            amzn.customize ["modifyvm", :id, "--cpus", "1"]
+      end
+end
+
+    config.vm.define "amzn2" do |amzn2|
+        amzn2.vm.box = "gbailey/amzn2"
+        amzn2.vm.hostname = "amzn2"
+        amzn2.vm.network  "private_network", ip: "172.24.1.16"
+        amzn2.vm.provider :virtualbox do |amzn2|
+            amzn2.customize ["modifyvm", :id, "--memory", "512"]
+            amzn2.customize ["modifyvm", :id, "--cpus", "1"]
+      end
+end
+end
+end
